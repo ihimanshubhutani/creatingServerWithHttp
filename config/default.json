@@ -1,0 +1,35 @@
+{
+  "POST_MESSAGE" : {
+  "method": "POST",
+  "uri": "https://slack.com/api/chat.postMessage",
+  "headers": {
+    "Content-type": "application/json",
+    "Authorization": "Bearer xoxp-976029065190-961031308434-973953802917-e69d926c138a4c978ec098a3db7d1ed1"
+  },
+
+  "json": { 
+    "channel": "testit",
+    "text": "Sample Message",
+    "as_user": "true" 
+  }
+},
+"USER_LIST" : {
+  "method": "GET",
+  "uri": "https://slack.com/api/users.list",
+  "headers": {
+    "Content-type": "application/json",
+    "Authorization": "Bearer xoxp-976029065190-961031308434-973953802917-e69d926c138a4c978ec098a3db7d1ed1"
+  }
+},
+
+  "MESSAGE": {
+    "SENT": "\nYour Message Is Sent Successfully !!",
+    "MEMBERS_LIST": "\nList of all Members and their Slack ID"
+  },
+
+  "OPTION": {
+    "ERROR": "error",
+    "RESPONSE": "response",
+    "DATA": "data"
+  }
+}

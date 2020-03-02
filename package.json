@@ -1,8 +1,7 @@
 {
-  "name": "instagramapi",
+  "name": "slackapi",
   "version": "1.0.0",
-  "description": "InstaHandler",
-  "main": "slackAPI.JS",
+  "description": "This project consist of fetching list of team members from slack workplace,and sending message to particular member",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx babel-node app/slackAPI.js"

@@ -7,11 +7,11 @@ import { get, post } from 'request';
  * Displays list of users from slack workplace.
  * @param {array} membersList - Array of objects of users from slack workplace.
  */
-const showUserList = (membersList) => {
+const showUserList = membersList => {
   const username = config.OBJECT.REAL_NAME;
   const userID = config.OBJECT.ID;
   const usernameList = _.map(membersList.members,
-    i => _.pick(i, [username, userID]));
+    teamMember => _.pick(teamMember, [username, userID]));
   console.log(`${config.MESSAGE.MEMBERS_LIST}`);
   console.log(_.compact(usernameList));
 };
@@ -27,9 +27,9 @@ const sendMessage = (userID, message) => {
   config.POST_MESSAGE.json.text = message;
 
   post(config.POST_MESSAGE)
-    .on(config.OPTION.ERROR, error => console.error(error))
+    .on(config.OPTION.ERROR, console.error)
     .on(config.OPTION.RESPONSE, response => response.on(
-      config.OPTION.DATA, (data) => {
+      config.OPTION.DATA, data => {
         const fetchedData = JSON.parse(data);
 
         if (_.isEqual(fetchedData.ok, false)) {
@@ -48,13 +48,11 @@ const sendMessage = (userID, message) => {
  */
 const getMembersList = () => {
   get(config.USER_LIST)
-    .on(config.OPTION.ERROR, err => console.error(err))
+    .on(config.OPTION.ERROR, console.error)
     .on(config.OPTION.RESPONSE, response => response.on(
-      config.OPTION.DATA, data => {
-        showUserList(JSON.parse(data));
-      },
+      config.OPTION.DATA, data => showUserList(JSON.parse(data)),
     ));
 };
 
 getMembersList();
-sendMessage('UUPRNU82K', `${config.MESSAGE.TIME} ${moment().format(config.FORMAT.TIME)}`);
+sendMessage(config.SLACK.ID, `${config.MESSAGE.TIME} ${moment().format(config.FORMAT.TIME)}`);

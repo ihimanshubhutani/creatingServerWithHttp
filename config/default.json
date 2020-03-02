@@ -22,7 +22,8 @@
   },
   "MESSAGE": {
     "SENT": "\nYour Message Is Sent Successfully !!",
-    "MEMBERS_LIST": "\nList of all Members and their Slack ID"
+    "MEMBERS_LIST": "\nList of all Members and their Slack ID",
+    "TIME": "\nMessage is sent at: "
   },
   "OPTION": {
     "ERROR": "error",
@@ -32,5 +33,8 @@
   "OBJECT": {
     "REAL_NAME": "real_name",
     "ID": "id"
+  },
+  "FORMAT": {
+    "TIME": "hh:mm"
   }
 }

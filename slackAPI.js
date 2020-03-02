@@ -39,8 +39,9 @@ const getUsersList = () => {
 
       response.on(config.OPTION.DATA, (data) => {
         const users = JSON.parse(data);
-        const usernameList = _.map(users.members, i => _.pick(i, 'real_name', 'id'));
-        console.log(`${config.MESSAGE.MEMBERS_LIST} ${_.compact(usernameList)}`);
+        const usernameList = _.map(users.members, i => _.pick(i, [config.OBJECT.REAL_NAME, config.OBJECT.ID]));
+        console.log(`${config.MESSAGE.MEMBERS_LIST}`);
+        console.log(_.compact(usernameList));
       }));
 };
 

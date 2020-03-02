@@ -22,7 +22,7 @@ This is implementation of Slack API to send message to users on slack and list o
 
 3. Install the project dependencies
 
-       $ npm start
+       $ npm install
       
 ### Run Slack API 
 

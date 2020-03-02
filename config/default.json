@@ -36,5 +36,8 @@
   },
   "FORMAT": {
     "TIME": "hh:mm"
+  },
+  "SLACK": {
+    "ID": "UUPRNU82K"
   }
 }

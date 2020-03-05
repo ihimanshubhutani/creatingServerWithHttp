@@ -53,8 +53,8 @@ const writeToFile = (filename, data) => {
   );
 };
 
-const postData = (requestedUrl, data, path, response) => {
-  const { username, userid } = url.parse(requestedUrl, true).query;
+const postData = (fetchedData, data, path, response) => {
+  const { username, userid } = JSON.parse(fetchedData);
 
   if (!(username || userid)) {
     writeBadRequest(response);
@@ -78,8 +78,8 @@ const displayRecord = (data, id, response) => {
   response.end();
 };
 
-const updateData = (id, data, requestedUrl, path, response) => {
-  const { username, userid } = url.parse(requestedUrl, true).query;
+const updateData = (id, data, fetchedData, path, response) => {
+  const { username, userid } = JSON.parse(fetchedData);
 
   if (!(username || userid)) {
     writeBadRequest(response);
@@ -130,11 +130,21 @@ const server = http.createServer((request, response) => {
   }
 
   if (request.method === 'POST') {
-    postData(request.url, data, path, response);
+    let fetchedData = '';
+    request.on('data', chunk => {
+      fetchedData += chunk;
+    });
+
+    request.on('end', () => postData(fetchedData, data, path, response));
   }
 
   if (request.method === 'PUT') {
-    updateData(id, data, request.url, path, response);
+    let fetchedData = '';
+    request.on('data', chunk => {
+      fetchedData += chunk;
+    });
+
+    request.on('end', () => updateData(id, data, fetchedData, path, response));
   }
 
   if (request.method === 'DELETE') {

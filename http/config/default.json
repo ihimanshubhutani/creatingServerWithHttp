@@ -1,0 +1,57 @@
+{
+  "POST_MESSAGE": {
+    "hostname": "www.slack.com",
+    "port": 443,
+    "path": "/api/chat.postMessage",
+    "method": "POST",
+    "headers": {
+      "Content-type": "application/json",
+      "Authorization": "Bearer xoxp-976029065190-961031308434-973953802917-e69d926c138a4c978ec098a3db7d1ed1"
+    },
+    "body": ""
+  },
+  "USER_LIST": {
+    "hostname": "www.slack.com",
+    "port": 443,
+    "method": "GET",
+    "path": "/api/users.list",
+    "headers": {
+      "Content-type": "application/json",
+      "Authorization": "Bearer xoxp-976029065190-961031308434-973953802917-e69d926c138a4c978ec098a3db7d1ed1"
+    }
+  },
+  "MESSAGE": {
+    "SENT": "\nYour Message Is Sent Successfully !!",
+    "MEMBERS_LIST": "\nList of all Members and their Slack ID",
+    "TIME": "\nMessage is sent at: "
+  },
+  "OPTION": {
+    "ERROR": "error",
+    "RESPONSE": "response",
+    "DATA": "data",
+    "END": "end"
+  },
+  "OBJECT": {
+    "REAL_NAME": "real_name",
+    "ID": "id"
+  },
+  "FORMAT": {
+    "TIME": "hh:mm"
+  },
+  "SLACK": {
+    "ID": "UUPRNU82K"
+  },
+  "BOOLEAN": {
+    "TRUE": true,
+    "FALSE": false
+  },
+  "STATUS": {
+    "SUCESS": 200
+  },
+  "STATUSCODE": {
+    "OK": "OK"
+  },
+  "DATA": {
+    "ID": null
+  }
+}

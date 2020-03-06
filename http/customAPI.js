@@ -46,19 +46,21 @@ const writeInternalServerError = response => {
 
 
 const breakUrl = requestUrl => {
-  const path = url.parse(requestUrl).pathname.split('/')[1];
-  const id = url.parse(requestUrl).pathname.split('/')[2];
+  const [, path, id] = url.parse(requestUrl).pathname.split('/');
   return { path, id };
 };
 
 const writeToFile = (filename, data, response) => {
+  let isFileWritten = true;
   fs.writeFileSync(
     filename, JSON.stringify(data), error => {
       if (error) {
         writeInternalServerError(response);
+        isFileWritten = false;
       }
     },
   );
+  return isFileWritten;
 };
 
 const createData = (fetchedData, data, path, response) => {
@@ -71,8 +73,9 @@ const createData = (fetchedData, data, path, response) => {
 
   data.totalCount += 1;
   data.members.push({ username, userid });
-  writeToFile(`./api/${path}.json`, data);
-  writeCreated(response);
+  if (writeToFile(`./api/${path}.json`, data)) {
+    writeCreated(response);
+  }
 };
 
 const displayRecord = (data, id, response) => {
@@ -98,15 +101,17 @@ const updateData = (id, data, fetchedData, path, response) => {
   if (!id) {
     data.totalCount += 1;
     data.members.push({ username, userid });
-    writeToFile(`./api/${path}.json`, data);
-    writeCreated(response);
-    return;
+    if (writeToFile(`./api/${path}.json`, data)) {
+      writeCreated(response);
+      return;
+    }
   }
 
   data.members[id - 1] = { username, userid };
-  writeToFile(`./api/${path}.json`, data, response);
-  response.write('{ "detail": "DATA UPDATED" }');
-  response.end();
+  if (writeToFile(`./api/${path}.json`, data, response)) {
+    response.write('{ "detail": "DATA UPDATED" }');
+    response.end();
+  }
 };
 
 const deleteData = (id, data, path, response) => {
@@ -117,11 +122,11 @@ const deleteData = (id, data, path, response) => {
 
   data.totalCount -= 1;
   _.pullAt(data.members, id - 1);
-  writeToFile(`./api/${path}.json`, data);
-  response.write('{ "detail": "DELETED" }');
-  response.end();
+  if (writeToFile(`./api/${path}.json`, data)) {
+    response.write('{ "detail": "DELETED" }');
+    response.end();
+  }
 };
-
 
 const server = http.createServer((request, response) => {
   response.writeHead(200, 'OK', { 'Content-type': 'application/json ' });

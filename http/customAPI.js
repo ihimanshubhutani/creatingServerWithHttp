@@ -26,11 +26,6 @@ const writeBadRequest = (response) => {
   response.end();
 };
 
-const writeInvalidUrl = (response) => {
-  response.writeHead(400, 'BAD REQUEST', { 'Content-type': 'application/json ' });
-  response.write('{ "detail": "Invalid Url" }');
-  response.end();
-};
 
 const writeNotFound = (response) => {
   response.writeHead(404, 'NOT FOUND', { 'Content-type': 'application/json ' });
@@ -53,11 +48,11 @@ const writeToFile = (filename, data) => {
   );
 };
 
-const postData = (fetchedData, data, path, response) => {
+const createData = (fetchedData, data, path, response) => {
   const { username, userid } = JSON.parse(fetchedData);
 
   if (!(username || userid)) {
-    writeBadRequest(response);
+    writeNotFound(response);
     return;
   }
   data.totalCount += 1;
@@ -121,7 +116,7 @@ const server = http.createServer((request, response) => {
   const data = directory[`/${path}`];
 
   if (!data) {
-    writeInvalidUrl(response);
+    writeBadRequest(response);
     return;
   }
 
@@ -135,7 +130,7 @@ const server = http.createServer((request, response) => {
       fetchedData += chunk;
     });
 
-    request.on('end', () => postData(fetchedData, data, path, response));
+    request.on('end', () => createData(fetchedData, data, path, response));
   }
 
   if (request.method === 'PUT') {

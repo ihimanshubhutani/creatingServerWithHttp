@@ -2,7 +2,7 @@ const http = require('http');
 const _ = require('lodash');
 const fs = require('fs');
 const url = require('url');
-const directory = require('./routes');
+const routes = require('./routes');
 
 const getData = (data, id, response) => {
   if (id) {
@@ -14,27 +14,31 @@ const getData = (data, id, response) => {
   response.end();
 };
 
-const writeCreated = (response) => {
+const writeMethodNotAllowed = response => {
+  response.writeHead(405, 'METHOD NOT ALLOWED', { 'Content-type': 'application/json ' });
+  response.write('{ "detail": "Requested Method Not Allowed On This Server" }');
+  response.end();
+};
+
+const writeCreated = response => {
   response.writeHead(201, 'CREATED', { 'Content-type': 'application/json ' });
   response.write('{ "detail": "DATA CREATED" }');
   response.end();
 };
 
-const writeBadRequest = (response) => {
+const writeBadRequest = response => {
   response.writeHead(400, 'BAD REQUEST', { 'Content-type': 'application/json ' });
   response.write('{ "detail": "Bad Request" }');
   response.end();
 };
 
-
-const writeNotFound = (response) => {
+const writeNotFound = response => {
   response.writeHead(404, 'NOT FOUND', { 'Content-type': 'application/json ' });
   response.write('{ "detail": "Not found" }');
   response.end();
 };
 
-
-const breakUrl = (requestUrl) => {
+const breakUrl = requestUrl => {
   const path = url.parse(requestUrl).pathname.split('/')[1];
   const id = url.parse(requestUrl).pathname.split('/')[2];
   return { path, id };
@@ -55,6 +59,7 @@ const createData = (fetchedData, data, path, response) => {
     writeNotFound(response);
     return;
   }
+
   data.totalCount += 1;
   data.members.push({ username, userid });
   writeToFile(`./api/${path}.json`, data);
@@ -100,9 +105,9 @@ const deleteData = (id, data, path, response) => {
     writeBadRequest(response);
     return;
   }
-  console.log(id);
-  console.log(_.pullAt(data.members, id - 1));
-  console.log(data.members);
+
+  data.totalCount -= 1;
+  _.pullAt(data.members, id - 1);
   writeToFile(`./api/${path}.json`, data);
   response.write('{ "detail": "DELETED" }');
   response.end();
@@ -113,7 +118,7 @@ const server = http.createServer((request, response) => {
   response.writeHead(200, 'OK', { 'Content-type': 'application/json ' });
   const { path, id } = breakUrl(request.url);
 
-  const data = directory[`/${path}`];
+  const data = routes[`/${path}`];
 
   if (!data) {
     writeBadRequest(response);
@@ -122,6 +127,7 @@ const server = http.createServer((request, response) => {
 
   if (request.method === 'GET') {
     getData(data, _.parseInt(id), response);
+    return;
   }
 
   if (request.method === 'POST') {
@@ -131,6 +137,7 @@ const server = http.createServer((request, response) => {
     });
 
     request.on('end', () => createData(fetchedData, data, path, response));
+    return;
   }
 
   if (request.method === 'PUT') {
@@ -140,11 +147,15 @@ const server = http.createServer((request, response) => {
     });
 
     request.on('end', () => updateData(id, data, fetchedData, path, response));
+    return;
   }
 
   if (request.method === 'DELETE') {
     deleteData(id, data, path, response);
+    return;
   }
+
+  writeMethodNotAllowed(response);
 });
 
 server.listen(3000);

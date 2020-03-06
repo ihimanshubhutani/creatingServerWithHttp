@@ -6,9 +6,9 @@ const read = filename => {
 };
 
 const routes = {
-  '/': read('./api/index.json'),
-  '/users': read('./api/users.json'),
-  '/people': read('./api/people.json'),
+  '/': read('./model/index.json'),
+  '/users': read('./model/users.json'),
+  '/people': read('./model/people.json'),
 };
 
 module.exports = routes;

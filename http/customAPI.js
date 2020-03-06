@@ -73,7 +73,7 @@ const createData = (fetchedData, data, path, response) => {
 
   data.totalCount += 1;
   data.members.push({ username, userid });
-  if (writeToFile(`./api/${path}.json`, data)) {
+  if (writeToFile(`./api/${path}.json`, data, response)) {
     writeCreated(response);
   }
 };
@@ -101,7 +101,7 @@ const updateData = (id, data, fetchedData, path, response) => {
   if (!id) {
     data.totalCount += 1;
     data.members.push({ username, userid });
-    if (writeToFile(`./api/${path}.json`, data)) {
+    if (writeToFile(`./api/${path}.json`, data, response)) {
       writeCreated(response);
       return;
     }
@@ -122,7 +122,7 @@ const deleteData = (id, data, path, response) => {
 
   data.totalCount -= 1;
   _.pullAt(data.members, id - 1);
-  if (writeToFile(`./api/${path}.json`, data)) {
+  if (writeToFile(`./api/${path}.json`, data, response)) {
     response.write('{ "detail": "DELETED" }');
     response.end();
   }

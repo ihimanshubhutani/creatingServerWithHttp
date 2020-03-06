@@ -44,7 +44,6 @@ const writeInternalServerError = response => {
   response.end();
 };
 
-
 const breakUrl = requestUrl => {
   const [, path, id] = url.parse(requestUrl).pathname.split('/');
   return { path, id };

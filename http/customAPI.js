@@ -38,16 +38,25 @@ const writeNotFound = response => {
   response.end();
 };
 
+const writeInternalServerError = response => {
+  response.writeHead(500, 'INTERNAL SERVER ERROR', { 'Content-type': 'application/json ' });
+  response.write('{ "detail": "Internal Server Error" }');
+  response.end();
+};
+
+
 const breakUrl = requestUrl => {
   const path = url.parse(requestUrl).pathname.split('/')[1];
   const id = url.parse(requestUrl).pathname.split('/')[2];
   return { path, id };
 };
 
-const writeToFile = (filename, data) => {
+const writeToFile = (filename, data, response) => {
   fs.writeFileSync(
     filename, JSON.stringify(data), error => {
-      if (error) throw error;
+      if (error) {
+        writeInternalServerError(response);
+      }
     },
   );
 };
@@ -95,7 +104,7 @@ const updateData = (id, data, fetchedData, path, response) => {
   }
 
   data.members[id - 1] = { username, userid };
-  writeToFile(`./api/${path}.json`, data);
+  writeToFile(`./api/${path}.json`, data, response);
   response.write('{ "detail": "DATA UPDATED" }');
   response.end();
 };
